@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CATÁLOGO GRENDENE 2026</title>
+    <style>
+        /* [MANTÉM TODO O CSS IGUAL AO CÓDIGO ANTERIOR] */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: #f5f5f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c8a 0%, #2563eb 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(37, 99, 235, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.95;
+            color: #e0e7ff;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #2563eb;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats {
+            background: white;
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 30px;
+            flex-wrap: wrap;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            border: 1px solid #eef2f6;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 0.95rem;
+        }
+
+        .stat-value {
+            background: #2563eb;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .catalog-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+            border: 1px solid #eef2f6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(37, 99, 235, 0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 250px;
+            object-fit: cover;
+            background: #f8fafc;
+            border-bottom: 1px solid #eef2f6;
+            padding: 20px;
+        }
+
+        .product-image-placeholder {
+            width: 100%;
+            height: 250px;
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2563eb;
+            font-weight: 500;
+            border-bottom: 1px solid #eef2f6;
+        }
+
+        .product-info {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .product-reference {
+            color: #2563eb;
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .product-reference::before {
+            content: "#";
+            color: #dc2626;
+            font-weight: 600;
+        }
+
+        .product-section {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 15px;
+        }
+
+        .variations-title {
+            color: #64748b;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin: 15px 0 10px;
+            letter-spacing: 0.5px;
+        }
+
+        .variations-list {
+            list-style: none;
+            border-top: 1px dashed #e2e8f0;
+            padding-top: 10px;
+        }
+
+        .variation-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 0.95rem;
+        }
+
+        .variation-item:last-child {
+            border-bottom: none;
+        }
+
+        .variation-code {
+            color: #2563eb;
+            font-weight: 500;
+            font-size: 0.85rem;
+            background: #eef2ff;
+            padding: 2px 8px;
+            border-radius: 12px;
+        }
+
+        .variation-desc {
+            color: #1e293b;
+            font-weight: 500;
+            flex: 1;
+            margin-left: 10px;
+        }
+
+        .variation-stock {
+            background: #dc2626;
+            color: white;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .variation-stock.in-stock {
+            background: #22c55e;
+        }
+
+        .variation-stock.low-stock {
+            background: #f59e0b;
+        }
+
+        .filters {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+            border: 1px solid #eef2f6;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px;
+            border: 2px solid #eef2f6;
+            border-radius: 30px;
+            font-size: 1rem;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .section-filter select {
+            padding: 12px 25px;
+            border: 2px solid #eef2f6;
+            border-radius: 30px;
+            font-size: 1rem;
+            background: white;
+            cursor: pointer;
+            color: #1e293b;
+            font-weight: 500;
+        }
+
+        .reset-btn {
+            padding: 12px 25px;
+            background: #fee2e2;
+            border: none;
+            border-radius: 30px;
+            color: #dc2626;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .reset-btn:hover {
+            background: #dc2626;
+            color: white;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 30px;
+            color: #64748b;
+            font-size: 0.9rem;
+        }
+
+        .error-message {
+            background: #fee2e2;
+            color: #dc2626;
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            font-weight: 500;
+            border: 1px solid #fecaca;
+            margin: 20px 0;
+        }
+
+        .success-message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 20px;
+            border-radius: 16px;
+            margin: 20px 0;
+            border: 2px solid #22c55e;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 60px;
+            background: white;
+            border-radius: 30px;
+            color: #64748b;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .catalog-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filters {
+                flex-direction: column;
+            }
+            
+            .search-box, .section-filter, .reset-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CATÁLOGO GRENDENE 2026</h1>
+            <p>Coleção completa de produtos organizados por referência</p>
+        </div>
+
+        <!-- Estatísticas dinâmicas -->
+        <div class="stats" id="stats" style="display: none;">
+            <div class="stat-item">
+                <span class="stat-label">Referências</span>
+                <span class="stat-value" id="totalRefs">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Variações</span>
+                <span class="stat-value" id="totalVars">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Seções</span>
+                <span class="stat-value" id="totalSections">0</span>
+            </div>
+        </div>
+
+        <!-- Filtros -->
+        <div class="filters" id="filters" style="display: none;">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Buscar por referência, código ou descrição...">
+            </div>
+            <div class="section-filter">
+                <select id="sectionFilter">
+                    <option value="">Todas as seções</option>
+                </select>
+            </div>
+            <button class="reset-btn" onclick="resetFilters()">Limpar filtros</button>
+        </div>
+
+        <!-- Loading -->
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p>Carregando catálogo...</p>
+        </div>
+
+        <!-- Grid de produtos -->
+        <div id="catalogGrid" class="catalog-grid"></div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>© 2026 CATÁLOGO GRENDENE - Atualizado em tempo real</p>
+        </div>
+    </div>
+
+    <script>
+        // =============================================
+        // CONFIGURAÇÃO - ALTERE AQUI SE NECESSÁRIO
+        // =============================================
+        
+        // ID da planilha (ID extraído do seu link: 13Ks5TUmfQtqNNklWmJ0BdFrAUcNaG-UASkO1q9FDvtg)
+        const SHEET_ID = '13Ks5TUmfQtqNNklWmJ0BdFrAUcNaG-UASkO1q9FDvtg';
+        
+        // NOME DA ABA (CALÇADOS)
+        const SHEET_NAME = 'CALÇADOS';
+        
+        // GID da aba específica (extraído do seu link)
+        const GID = '1941141936';
+        
+        // URL de exportação direta (mais estável para este ID)
+        const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=${GID}`;
+
+        let allProducts = [];
+        let groupedProducts = {};
+
+        async function loadCatalog() {
+            const loading = document.getElementById('loading');
+            const stats = document.getElementById('stats');
+            const filters = document.getElementById('filters');
+            const grid = document.getElementById('catalogGrid');
+            
+            try {
+                console.log('Carregando dados da aba:', SHEET_NAME);
+                console.log('URL:', SHEET_URL);
+                
+                const response = await fetch(SHEET_URL);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const csvText = await response.text();
+                console.log('CSV carregado, processando...');
+                
+                // Processar CSV
+                const lines = csvText.split('\n');
+                
+                if (lines.length < 2) {
+                    throw new Error('Arquivo CSV vazio');
+                }
+                
+                // Pular cabeçalho
+                allProducts = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    if (!lines[i].trim()) continue;
+                    
+                    // Processar CSV respeitando aspas
+                    const values = [];
+                    let current = '';
+                    let inQuotes = false;
+                    
+                    for (let char of lines[i]) {
+                        if (char === '"') {
+                            inQuotes = !inQuotes;
+                        } else if (char === ',' && !inQuotes) {
+                            values.push(current.trim());
+                            current = '';
+                        } else {
+                            current += char;
+                        }
+                    }
+                    values.push(current.trim());
+                    
+                    // Limpar aspas dos valores
+                    const cleanValues = values.map(v => v.replace(/^"|"$/g, ''));
+                    
+                    if (cleanValues.length >= 6) {
+                        const product = {
+                            codigo: cleanValues[0] || '',
+                            descricao: cleanValues[1] || '',
+                            estoque: parseInt(cleanValues[2]) || 0,
+                            secao: cleanValues[3] || '',
+                            referencia: cleanValues[4] || '',
+                            imagem: cleanValues[5] || ''
+                        };
+                        
+                        // Só adicionar se tiver referência e descrição
+                        if (product.referencia && product.descricao) {
+                            allProducts.push(product);
+                        }
+                    }
+                }
+
+                console.log(`Encontrados ${allProducts.length} produtos`);
+
+                if (allProducts.length === 0) {
+                    throw new Error('Nenhum produto encontrado. Verifique se: \n' +
+                                  '1. A aba se chama exatamente "' + SHEET_NAME + '"\n' +
+                                  '2. As colunas estão na ordem correta\n' +
+                                  '3. Existem dados na planilha');
+                }
+
+                // Agrupar por referência
+                groupByReference();
+                
+                // Mostrar elementos da interface
+                stats.style.display = 'flex';
+                filters.style.display = 'flex';
+                loading.style.display = 'none';
+                
+                updateFilters();
+                renderCatalog();
+                
+                // Mostrar mensagem de sucesso
+                const successMsg = document.createElement('div');
+                successMsg.className = 'success-message';
+                successMsg.textContent = `✅ Catálogo carregado! ${allProducts.length} produtos em ${Object.keys(groupedProducts).length} referências.`;
+                document.querySelector('.header').after(successMsg);
+                setTimeout(() => successMsg.remove(), 4000);
+                
+            } catch (error) {
+                console.error('Erro detalhado:', error);
+                
+                loading.innerHTML = `
+                    <div class="error-message">
+                        <h3 style="color: #dc2626; margin-bottom: 20px;">❌ Erro ao carregar dados</h3>
+                        <p style="margin-bottom: 20px;">${error.message}</p>
+                        
+                        <div style="background: white; padding: 20px; border-radius: 16px; text-align: left; margin: 20px 0;">
+                            <p><strong>📌 Configuração atual:</strong></p>
+                            <p>• Nome da aba no código: <strong>"${SHEET_NAME}"</strong></p>
+                            <p>• ID da planilha: OK</p>
+                            <p>• Publicação: OK</p>
+                            
+                            <p style="margin-top: 20px;"><strong>🔍 Verifique:</strong></p>
+                            <p>1. A planilha está **"Publicada na web"** como CSV?</p>
+                            <p>2. **CORS Error?** Se você estiver abrindo o arquivo direto da pasta (file://), o navegador pode bloquear por segurança. Tente usar o **Live Server** ou arraste para um navegador que permita (Chrome com flag ou Firefox às vezes é mais flexível).</p>
+                            <p>3. O nome da aba na planilha é exatamente <strong>"${SHEET_NAME}"</strong>?</p>
+                        </div>
+                        
+                        <button onclick="location.reload()" style="
+                            background: #2563eb;
+                            color: white;
+                            border: none;
+                            padding: 12px 30px;
+                            border-radius: 30px;
+                            font-size: 1rem;
+                            font-weight: 600;
+                            cursor: pointer;
+                            margin-top: 20px;
+                        ">🔄 Tentar novamente</button>
+                    </div>
+                `;
+            }
+        }
+
+        function groupByReference() {
+            groupedProducts = {};
+            allProducts.forEach(product => {
+                if (!groupedProducts[product.referencia]) {
+                    groupedProducts[product.referencia] = {
+                        referencia: product.referencia,
+                        imagem: product.imagem,
+                        secao: product.secao,
+                        variacoes: []
+                    };
+                }
+                groupedProducts[product.referencia].variacoes.push(product);
+            });
+            
+            // Ordenar referências
+            groupedProducts = Object.fromEntries(
+                Object.entries(groupedProducts).sort((a, b) => a[0].localeCompare(b[0]))
+            );
+        }
+
+        function updateFilters() {
+            document.getElementById('totalRefs').textContent = Object.keys(groupedProducts).length;
+            document.getElementById('totalVars').textContent = allProducts.length;
+            
+            const secoes = [...new Set(allProducts.map(p => p.secao))].filter(s => s && s !== 'null' && s !== '');
+            document.getElementById('totalSections').textContent = secoes.length;
+            
+            const select = document.getElementById('sectionFilter');
+            select.innerHTML = '<option value="">Todas as seções</option>';
+            secoes.sort().forEach(secao => {
+                select.innerHTML += `<option value="${secao}">${secao}</option>`;
+            });
+        }
+
+        function getStockClass(estoque) {
+            if (estoque <= 0) return '';
+            if (estoque < 5) return 'low-stock';
+            return 'in-stock';
+        }
+
+        function renderCatalog() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const sectionFilter = document.getElementById('sectionFilter').value;
+            
+            const grid = document.getElementById('catalogGrid');
+            
+            const filteredRefs = Object.values(groupedProducts).filter(group => {
+                const matchesSearch = group.referencia.toLowerCase().includes(searchTerm) ||
+                                    group.variacoes.some(v => 
+                                        v.descricao.toLowerCase().includes(searchTerm) ||
+                                        v.codigo.toLowerCase().includes(searchTerm)
+                                    );
+                const matchesSection = !sectionFilter || group.secao === sectionFilter;
+                return matchesSearch && matchesSection;
+            });
+
+            if (filteredRefs.length === 0) {
+                grid.innerHTML = '<div class="no-results">Nenhum produto encontrado</div>';
+                return;
+            }
+
+            grid.innerHTML = filteredRefs.map(group => {
+                // Pegar a primeira imagem válida
+                const imagem = group.variacoes.find(v => v.imagem && v.imagem.startsWith('http'))?.imagem || '';
+                
+                return `
+                        <div class="product-image-wrapper" style="position: relative; height: 250px; background: #f8fafc; border-bottom: 1px solid #eef2f6;">
+                            <div class="product-image-placeholder" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #2563eb; font-weight: 500;">
+                                <span style="font-size: 3rem;">👟</span>
+                            </div>
+                            ${imagem ? 
+                                `<img class="product-image" src="${imagem}" alt="${group.referencia}" 
+                                    style="display: none; width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0;"
+                                    onload="this.style.display='block'; this.previousElementSibling.style.display='none';" 
+                                    onerror="this.style.display='none'; this.previousElementSibling.style.display='flex';">` : 
+                                ''
+                            }
+                        </div>
+                        <div class="product-info">
+                            <div class="product-reference">
+                                ${group.referencia}
+                            </div>
+                            <div class="product-section">
+                                ${group.secao || 'Sem seção'}
+                            </div>
+                            
+                            <div class="variations-title">
+                                CORES (${group.variacoes.length})
+                            </div>
+                            
+                            <ul class="variations-list">
+                                ${group.variacoes.map(v => `
+                                    <li class="variation-item">
+                                        <span class="variation-code">${v.codigo}</span>
+                                        <span class="variation-desc">${v.descricao}</span>
+                                        <span class="variation-stock ${getStockClass(v.estoque)}">
+                                            ${v.estoque}
+                                        </span>
+                                    </li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function resetFilters() {
+            document.getElementById('searchInput').value = '';
+            document.getElementById('sectionFilter').value = '';
+            renderCatalog();
+        }
+
+        // Event listeners
+        document.getElementById('searchInput')?.addEventListener('input', renderCatalog);
+        document.getElementById('sectionFilter')?.addEventListener('change', renderCatalog);
+
+        // Iniciar
+        window.addEventListener('load', loadCatalog);
+    </script>
+</body>
+</html>
