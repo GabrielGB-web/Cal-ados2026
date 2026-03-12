@@ -124,43 +124,53 @@
             font-size: 2rem;
         }
 
-        /* Grid System */
-        .catalog-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+        /* List System */
+        .catalog-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
             margin-bottom: 60px;
         }
 
         .product-card {
             background: white;
-            border-radius: 32px;
+            border-radius: 24px;
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.03);
-            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             border: 1px solid #f1f5f9;
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            min-height: 280px;
         }
 
         .product-card:hover {
-            transform: translateY(-12px) scale(1.02);
-            box-shadow: 0 30px 60px rgba(30, 58, 138, 0.12);
-            border-color: #e2e8f0;
+            transform: translateX(10px);
+            box-shadow: 0 20px 40px rgba(30, 58, 138, 0.08);
+            border-color: #cbd5e1;
         }
 
-        .product-card:hover .product-image {
-            transform: scale(1.1);
+        .product-image-container {
+            width: 320px;
+            min-width: 320px;
+            background: #f8fafc;
+            border-right: 1px solid #eef2f6;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
         }
 
         .product-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            background: #f8fafc;
-            border-bottom: 1px solid #eef2f6;
-            padding: 20px;
-            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            max-width: 100%;
+            max-height: 240px;
+            object-fit: contain;
+            transition: transform 0.5s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
         }
 
         .product-image-placeholder {
@@ -258,8 +268,19 @@
             color: #ef4444;
         }
 
-        .variation-stock.in-stock { color: #22c55e; }
+        .variation-stock.in-stock { color: #10b981; }
         .variation-stock.low-stock { color: #f59e0b; }
+
+        .variation-header {
+            display: grid;
+            grid-template-columns: 80px 1fr 60px;
+            padding: 0 12px 10px;
+            color: #94a3b8;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
 
         /* Filters Styling */
         .filters {
@@ -430,8 +451,8 @@
             <p>Carregando catálogo...</p>
         </div>
 
-        <!-- Grid de produtos -->
-        <div id="catalogGrid" class="catalog-grid"></div>
+        <!-- Lista de produtos -->
+        <div id="catalogList" class="catalog-list"></div>
 
         <!-- Footer -->
         <div class="footer">
@@ -537,8 +558,8 @@
                                   '3. Existem dados na planilha');
                 }
 
-                // Agrupar por referência
-                groupByReference();
+                // Agrupar por imagem (ou referência se imagem faltar)
+                groupByImage();
                 
                 // Mostrar elementos da interface
                 stats.style.display = 'flex';
@@ -591,23 +612,27 @@
             }
         }
 
-        function groupByReference() {
+        function groupByImage() {
             groupedProducts = {};
             allProducts.forEach(product => {
-                if (!groupedProducts[product.referencia]) {
-                    groupedProducts[product.referencia] = {
+                // Chave de agrupamento: imagem ou referência
+                const groupKey = product.imagem || product.referencia;
+                
+                if (!groupedProducts[groupKey]) {
+                    groupedProducts[groupKey] = {
+                        key: groupKey,
                         referencia: product.referencia,
                         imagem: product.imagem,
                         secao: product.secao,
                         variacoes: []
                     };
                 }
-                groupedProducts[product.referencia].variacoes.push(product);
+                groupedProducts[groupKey].variacoes.push(product);
             });
             
-            // Ordenar referências
+            // Ordenar por referência
             groupedProducts = Object.fromEntries(
-                Object.entries(groupedProducts).sort((a, b) => a[0].localeCompare(b[0]))
+                Object.entries(groupedProducts).sort((a, b) => a[1].referencia.localeCompare(b[1].referencia))
             );
         }
 
@@ -635,7 +660,7 @@
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const sectionFilter = document.getElementById('sectionFilter').value;
             
-            const grid = document.getElementById('catalogGrid');
+            const list = document.getElementById('catalogList');
             
             const filteredRefs = Object.values(groupedProducts).filter(group => {
                 const matchesSearch = group.referencia.toLowerCase().includes(searchTerm) ||
@@ -648,45 +673,51 @@
             });
 
             if (filteredRefs.length === 0) {
-                grid.innerHTML = '<div class="no-results">Nenhum produto encontrado</div>';
+                list.innerHTML = '<div class="no-results">Nenhum produto encontrado</div>';
                 return;
             }
 
-            grid.innerHTML = filteredRefs.map(group => {
-                // Pegar a primeira imagem válida
+            list.innerHTML = filteredRefs.map(group => {
+                // Pegar a primeira imagem válida do grupo
                 const imagem = group.variacoes.find(v => v.imagem && v.imagem.startsWith('http'))?.imagem || '';
                 
                 return `
-                    <div class="product-card" style="animation: fadeInUp 0.6s ease forwards; opacity: 0;">
-                        <div class="product-image-wrapper" style="position: relative; height: 320px; background: #f8fafc; border-bottom: 1px solid #eef2f6; overflow: hidden;">
-                            <div class="product-image-placeholder" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #2563eb; font-weight: 500;">
-                                <span style="font-size: 4rem; opacity: 0.3;">👟</span>
+                    <div class="product-card" style="animation: fadeInUp 0.5s ease forwards; opacity: 0;">
+                        <div class="product-image-container">
+                            <div class="product-image-placeholder" style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #2563eb; font-weight: 500; background: transparent; border: none;">
+                                <span style="font-size: 4rem; opacity: 0.15;">👟</span>
                             </div>
                             ${imagem ? 
                                 `<img class="product-image" src="${imagem}" alt="${group.referencia}" 
-                                    style="display: none; width: 100%; height: 100%; object-fit: contain; position: absolute; top: 0; left: 0; padding: 20px; transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);"
+                                    style="display: none;"
                                     onload="this.style.display='block'; this.previousElementSibling.style.display='none';" 
                                     onerror="this.style.display='none'; this.previousElementSibling.style.display='flex';">` : 
                                 ''
                             }
                         </div>
                         <div class="product-info">
-                            <div class="product-reference">
-                                ${group.referencia}
-                            </div>
-                            <div class="product-section">
-                                ${group.secao || 'Sem seção'}
+                            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px;">
+                                <div>
+                                    <div class="product-reference">${group.referencia}</div>
+                                    <div class="product-section">${group.secao || 'Sem seção'}</div>
+                                </div>
                             </div>
                             
                             <div class="variations-title">
-                                CORES (${group.variacoes.length})
+                                PRODUTOS NESTA IMAGEM (${group.variacoes.length})
+                            </div>
+                            
+                            <div class="variation-header">
+                                <span>CÓDIGO</span>
+                                <span>DESCRIÇÃO / MODELO</span>
+                                <span style="text-align: right;">ESTOQUE</span>
                             </div>
                             
                             <ul class="variations-list">
                                 ${group.variacoes.map(v => `
                                     <li class="variation-item">
                                         <span class="variation-code">${v.codigo}</span>
-                                        <span class="variation-desc">${v.descricao}</span>
+                                        <span class="variation-desc" title="${v.descricao}">${v.descricao}</span>
                                         <span class="variation-stock ${getStockClass(v.estoque)}">
                                             ${v.estoque}
                                         </span>
